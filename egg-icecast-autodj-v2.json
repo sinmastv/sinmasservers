@@ -1,0 +1,49 @@
+{
+  "_comment": "DO NOT EDIT: FILE GENERATED FOR PTERODACTYL PANEL",
+  "meta": {"version": "PTDL_v2", "update_url": null},
+  "exported_at": "2026-08-29T00:30:00+02:00",
+  "name": "Icecast AutoDJ v2 - Liquidsoap Panel",
+  "author": "SINMAS",
+  "description": "Icecast 2.5.0 + Liquidsoap AutoDJ + panel web. First login creates the owner account. Persistent data under /home/container/data.",
+  "features": null,
+  "docker_images": {
+    "SINMAS Icecast AutoDJ v2": "sinmas/icecast-autodj-v2:1.0.0"
+  },
+  "file_denylist": [],
+  "startup": "node /opt/icecast-autodj/app/server.js",
+  "config": {
+    "files": "{}",
+    "startup": "{\"done\":[\"Icecast AutoDJ v2 panel ready\"]}",
+    "logs": "{}",
+    "stop": "^C"
+  },
+  "scripts": {
+    "installation": {
+      "script": "#!/bin/bash\nset -e\ncd /mnt/server\nmkdir -p data/{config,music,playlists,logs,.uploads}\ncat > README-FIRST.txt <<'TXT'\nIcecast AutoDJ v2\n\nPuerto principal: panel web.\nNecesita dos allocations extra para ICECAST_PORT y LIVE_PORT.\nPrimer acceso: crea el propietario. No hay credenciales por defecto.\nDatos persistentes: /home/container/data\nTXT\nchmod -R u+rwX,go-rwx data || true\n",
+      "container": "ghcr.io/ptero-eggs/installers:debian",
+      "entrypoint": "bash"
+    }
+  },
+  "variables": [
+    {
+      "name": "Icecast Port",
+      "description": "Allocation adicional para Icecast. Debe existir en el servidor y coincidir con este puerto.",
+      "env_variable": "ICECAST_PORT",
+      "default_value": "8000",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|integer|between:1024,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Live DJ Port",
+      "description": "Allocation adicional para Liquidsoap Harbor (BUTT/Mixxx/etc.). Debe existir en el servidor y coincidir con este puerto.",
+      "env_variable": "LIVE_PORT",
+      "default_value": "8005",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|integer|between:1024,65535",
+      "field_type": "text"
+    }
+  ]
+}
